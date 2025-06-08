@@ -1,4 +1,4 @@
-// app.js
+import { runTests } from './tests.js';
 import { db } from './firebase-init.js';
 import { collection, doc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
