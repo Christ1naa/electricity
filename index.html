@@ -4,16 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Лічильники День-Ніч</title>
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+  <script src="tests.js" defer></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-  <!-- Firebase init скрипт - модуль -->
-  <script type="module" src="firebase-init.js"></script>
-
-  <!-- Твій додаток (app.js) теж як модуль -->
-  <script type="module" src="app.js" defer></script>
-
-  <!-- Тести -->
-  <script type="module" src="tests.js" defer></script>
 </head>
 <body class="bg-gray-100 text-gray-800 p-4">
   <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
@@ -37,7 +31,7 @@
 
     <hr class="my-6"/>
 
-    <button id="run-tests-btn" class="bg-green-600 text-white px-4 py-2 rounded">Запустити тести</button>
+    <button onclick="runTests()" class="bg-green-600 text-white px-4 py-2 rounded">Запустити тести</button>
     <pre id="test-results" class="mt-4 bg-gray-200 p-2 rounded whitespace-pre-wrap"></pre>
   </div>
 </body>
