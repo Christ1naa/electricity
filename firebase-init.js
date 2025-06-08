@@ -1,11 +1,8 @@
 // firebase-init.js
-
-// Імпортуємо необхідні функції з Firebase SDK по модульній схемі
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
-// Конфігурація твого Firebase проєкту
 const firebaseConfig = {
   apiKey: "AIzaSyC7T8xF3C6rZKmF0EhvwEueUPnxXLyrAxg",
   authDomain: "electricity-319d2.firebaseapp.com",
@@ -16,10 +13,8 @@ const firebaseConfig = {
   measurementId: "G-H8ZEF80XWY"
 };
 
-// Ініціалізуємо Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
-// Експортуємо об'єкт db, щоб використовувати Firestore у інших скриптах
 export { db };
