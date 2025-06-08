@@ -1,4 +1,4 @@
-export function runTests() {
+function runTests() {
   let results = [];
 
   function assertEqual(actual, expected, label) {
