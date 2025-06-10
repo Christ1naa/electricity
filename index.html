@@ -4,12 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Лічильники День-Ніч</title>
-
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
   <script src="config.js"></script>
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="app.js"></script>
+  <script src="app.js" defer></script>
   <script src="tests.js" defer></script>
-
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-800 p-4">
@@ -36,17 +35,6 @@
 
     <button onclick="runTests()" class="bg-green-600 text-white px-4 py-2 rounded">Запустити тести</button>
     <pre id="test-results" class="mt-4 bg-gray-200 p-2 rounded whitespace-pre-wrap"></pre>
-
-    <div class="flex gap-4 mt-6">
-      <button onclick="exportJSON()" class="bg-purple-600 text-white px-4 py-2 rounded">
-        Експортувати JSON
-      </button>
-
-      <label class="bg-yellow-500 text-white px-4 py-2 rounded cursor-pointer">
-        Імпортувати JSON
-        <input type="file" id="import-file" accept=".json" hidden onchange="importJSON(event)">
-      </label>
-    </div>
   </div>
 </body>
 </html>
