@@ -33,6 +33,17 @@
 
     <button onclick="runTests()" class="bg-green-600 text-white px-4 py-2 rounded">Запустити тести</button>
     <pre id="test-results" class="mt-4 bg-gray-200 p-2 rounded whitespace-pre-wrap"></pre>
+
+    <div class="flex gap-4 mt-6">
+      <button onclick="exportJSON()" class="bg-purple-600 text-white px-4 py-2 rounded">
+        Експортувати JSON
+      </button>
+
+      <label class="bg-yellow-500 text-white px-4 py-2 rounded cursor-pointer">
+        Імпортувати JSON
+        <input type="file" id="import-file" accept=".json" hidden onchange="importJSON(event)">
+      </label>
+    </div>
   </div>
 </body>
 </html>
