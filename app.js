@@ -1,11 +1,24 @@
-let meterData = JSON.parse(localStorage.getItem("meterData")) || { ...CONFIG.initialMeters };
-let meterHistory = JSON.parse(localStorage.getItem("meterHistory")) || {};
+import { db, ref, set, get, child, push } from "./firebase.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+const dbRef = ref(db);
+
+let meterData = {};
+let meterHistory = {};
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const snapshot = await get(child(dbRef, `meters`));
+  if (snapshot.exists()) {
+    meterHistory = snapshot.val();
+    for (let id in meterHistory) {
+      const entries = meterHistory[id];
+      const last = entries[entries.length - 1];
+      meterData[id] = { day: last.day, night: last.night };
+    }
+  }
   renderHistory();
 });
 
-document.getElementById("meter-form").addEventListener("submit", function (e) {
+document.getElementById("meter-form").addEventListener("submit", async function (e) {
   e.preventDefault();
 
   const id = document.getElementById("meter-id").value.trim();
@@ -15,7 +28,7 @@ document.getElementById("meter-form").addEventListener("submit", function (e) {
   const result = processMeterReading(id, day, night);
   document.getElementById("result").innerText = `Сума до оплати: ${result.bill.toFixed(2)} грн${result.adjusted ? " (накрутка!)" : ""}`;
 
-  saveData();
+  await saveData(id);
   renderHistory();
 });
 
@@ -40,21 +53,23 @@ function processMeterReading(id, newDay, newNight) {
 
   meterData[id] = { day: newDay, night: newNight };
 
-  history.push({
+  const entry = {
     timestamp: new Date().toISOString(),
     day: newDay,
     night: newNight,
     bill,
     adjusted
-  });
+  };
+
+  history.push(entry);
   meterHistory[id] = history;
 
   return { bill, adjusted };
 }
 
-function saveData() {
-  localStorage.setItem("meterData", JSON.stringify(meterData));
-  localStorage.setItem("meterHistory", JSON.stringify(meterHistory));
+async function saveData(id) {
+  const historyRef = ref(db, `meters/${id}`);
+  await set(historyRef, meterHistory[id]);
 }
 
 function renderHistory() {
@@ -70,6 +85,7 @@ function renderHistory() {
     const title = document.createElement("h3");
     title.innerText = `Лічильник ${id}`;
     title.classList.add("font-bold", "text-blue-700", "mt-4");
+
     container.appendChild(title);
 
     const list = document.createElement("ul");
@@ -83,41 +99,4 @@ function renderHistory() {
 
     container.appendChild(list);
   }
-}
-
-function exportJSON() {
-  const data = {
-    meterData,
-    meterHistory
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "meters-data.json";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importJSON(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (data.meterData && data.meterHistory) {
-        meterData = data.meterData;
-        meterHistory = data.meterHistory;
-        saveData();
-        renderHistory();
-        alert("Дані успішно імпортовано.");
-      } else {
-        alert("Файл має неправильну структуру.");
-      }
-    } catch (err) {
-      alert("Помилка при зчитуванні JSON-файлу.");
-    }
-  };
-  reader.readAsText(file);
 }
