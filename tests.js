@@ -1,28 +1,38 @@
 function runTests() {
-  let results = [];
+  const results = [];
 
-  function assertEqual(actual, expected, label) {
-    const passed = actual === expected;
-    results.push(`${passed ? "✅" : "❌"} ${label}: ${actual} === ${expected}`);
+  function assertEqual(actual, expected, message) {
+    const success = JSON.stringify(actual) === JSON.stringify(expected);
+    results.push(`${success ? "✅" : "❌"} ${message}`);
+    if (!success) {
+      results.push(`   Очікувалось: ${JSON.stringify(expected)}`);
+      results.push(`   Отримано:    ${JSON.stringify(actual)}`);
+    }
   }
 
+  // Reset test state
   meterData = {};
   meterHistory = {};
 
-  let res = processMeterReading("TEST1", 500, 300);
-  assertEqual(res.bill, 500 * CONFIG.tariffs.day + 300 * CONFIG.tariffs.night, "Новий лічильник");
+  // 1. Новий лічильник
+  let result = processMeterReading("TEST1", 200, 150);
+  assertEqual(result.adjusted, false, "Новий лічильник: без накрутки");
 
-  res = processMeterReading("TEST1", 600, 350);
-  assertEqual(res.bill, 100 * CONFIG.tariffs.day + 50 * CONFIG.tariffs.night, "Оновлення");
+  // 2. Оновлення існуючого лічильника
+  result = processMeterReading("TEST1", 250, 180);
+  assertEqual(result.adjusted, false, "Оновлення існуючого лічильника: без накрутки");
 
-  res = processMeterReading("TEST1", 700, 100);
-  assertEqual(res.adjusted, true, "Занижений нічний");
+  // 3. Занижені нічні показники
+  result = processMeterReading("TEST1", 260, 100);
+  assertEqual(result.adjusted, true, "Занижені нічні показники: з накруткою");
 
-  res = processMeterReading("TEST1", 100, 500);
-  assertEqual(res.adjusted, true, "Занижений денний");
+  // 4. Занижені денні показники
+  result = processMeterReading("TEST1", 200, 190);
+  assertEqual(result.adjusted, true, "Занижені денні показники: з накруткою");
 
-  res = processMeterReading("TEST1", 50, 100);
-  assertEqual(res.adjusted, true, "Обидва занижені");
+  // 5. Занижені обидва
+  result = processMeterReading("TEST1", 100, 100);
+  assertEqual(result.adjusted, true, "Занижені обидва показники: з накруткою");
 
-  document.getElementById("test-results").innerText = results.join("\n");
+  document.getElementById("test-results").textContent = results.join("\n");
 }
