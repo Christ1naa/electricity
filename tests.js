@@ -30,3 +30,6 @@ export function runTests() {
 
   document.getElementById("test-results").innerText = results.join("\n");
 }
+export function runTests() { ... }
+
+window.runTests = runTests;
