@@ -1,3 +1,4 @@
+// config.js (без змін)
 const CONFIG = {
   tariffs: {
     day: 3.5,
@@ -6,8 +7,5 @@ const CONFIG = {
   penalty: {
     day: 100,
     night: 80
-  },
-  initialMeters: {
-    "ABC123": { day: 1000, night: 800 }
   }
 };
