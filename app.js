@@ -1,4 +1,3 @@
-// app.js
 let meterData = JSON.parse(localStorage.getItem("meterData")) || { ...CONFIG.initialMeters };
 let meterHistory = JSON.parse(localStorage.getItem("meterHistory")) || {};
 
