@@ -1,8 +1,8 @@
 import { db, ref, set, get, push } from './firebase.js';
 import { CONFIG } from './config.js';
 
-let meterData = {};
-let meterHistory = {};
+window.meterData = {};
+window.meterHistory = {};
 
 async function loadFromDb() {
   try {
