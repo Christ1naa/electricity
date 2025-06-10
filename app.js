@@ -1,10 +1,10 @@
-import { db, ref, set, get, push } from './firebase.js';
+import { db, ref, set, get } from './firebase.js';
 import { CONFIG } from './config.js';
 
-window.meterData = {};
-window.meterHistory = {};
+export let meterData = {};
+export let meterHistory = {};
 
-async function loadFromDb() {
+export async function loadFromDb() {
   try {
     const meterDataSnap = await get(ref(db, 'meterData'));
     if (meterDataSnap.exists()) {
@@ -24,7 +24,7 @@ async function loadFromDb() {
   }
 }
 
-async function saveToDb() {
+export async function saveToDb() {
   try {
     await set(ref(db, 'meterData'), meterData);
     await set(ref(db, 'meterHistory'), meterHistory);
@@ -33,7 +33,7 @@ async function saveToDb() {
   }
 }
 
-function processMeterReading(id, newDay, newNight) {
+export function processMeterReading(id, newDay, newNight) {
   const prev = meterData[id] || { day: 0, night: 0 };
   const hist = meterHistory[id] || [];
 
@@ -95,8 +95,8 @@ function renderHistory() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadFromDb();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadFromDb();
 
   document.getElementById('meter-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -113,7 +113,3 @@ document.addEventListener('DOMContentLoaded', () => {
     renderHistory();
   });
 });
-
-// Експортуємо для тестів, якщо потрібно
-window.processMeterReading = processMeterReading;
-window.CONFIG = CONFIG;
