@@ -1,7 +1,7 @@
-import { processMeterReading, meterData, meterHistory } from './app.js';
-import { CONFIG } from './config.js';
+const processMeterReading = window.processMeterReading;
+const CONFIG = window.CONFIG;
 
-export function runTests() {
+function runTests() {
   let results = [];
 
   function assertEqual(actual, expected, label) {
@@ -9,9 +9,8 @@ export function runTests() {
     results.push(`${passed ? "✅" : "❌"} ${label}: ${actual} === ${expected}`);
   }
 
-  // Очистка даних перед тестами
-  for (const key in meterData) delete meterData[key];
-  for (const key in meterHistory) delete meterHistory[key];
+  window.meterData = {};
+  window.meterHistory = {};
 
   let res = processMeterReading("TEST1", 500, 300);
   assertEqual(res.bill, 500 * CONFIG.tariffs.day + 300 * CONFIG.tariffs.night, "Новий лічильник");
@@ -30,6 +29,3 @@ export function runTests() {
 
   document.getElementById("test-results").innerText = results.join("\n");
 }
-export function runTests() { ... }
-
-window.runTests = runTests;
