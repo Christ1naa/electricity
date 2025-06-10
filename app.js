@@ -1,8 +1,9 @@
+// app.js
 let meterData = JSON.parse(localStorage.getItem("meterData")) || { ...CONFIG.initialMeters };
 let meterHistory = JSON.parse(localStorage.getItem("meterHistory")) || {};
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderHistory(); // ВАЖЛИВО: відображення при старті
+  renderHistory();
 });
 
 document.getElementById("meter-form").addEventListener("submit", function (e) {
@@ -38,10 +39,8 @@ function processMeterReading(id, newDay, newNight) {
 
   const bill = deltaDay * CONFIG.tariffs.day + deltaNight * CONFIG.tariffs.night;
 
-  // Оновити дані
   meterData[id] = { day: newDay, night: newNight };
 
-  // Додати до історії
   history.push({
     timestamp: new Date().toISOString(),
     day: newDay,
@@ -72,7 +71,6 @@ function renderHistory() {
     const title = document.createElement("h3");
     title.innerText = `Лічильник ${id}`;
     title.classList.add("font-bold", "text-blue-700", "mt-4");
-
     container.appendChild(title);
 
     const list = document.createElement("ul");
@@ -86,4 +84,41 @@ function renderHistory() {
 
     container.appendChild(list);
   }
+}
+
+function exportJSON() {
+  const data = {
+    meterData,
+    meterHistory
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "meters-data.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.meterData && data.meterHistory) {
+        meterData = data.meterData;
+        meterHistory = data.meterHistory;
+        saveData();
+        renderHistory();
+        alert("Дані успішно імпортовано.");
+      } else {
+        alert("Файл має неправильну структуру.");
+      }
+    } catch (err) {
+      alert("Помилка при зчитуванні JSON-файлу.");
+    }
+  };
+  reader.readAsText(file);
 }
