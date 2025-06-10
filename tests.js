@@ -1,3 +1,6 @@
+const processMeterReading = window.processMeterReading;
+const CONFIG = window.CONFIG;
+
 function runTests() {
   let results = [];
 
@@ -6,8 +9,8 @@ function runTests() {
     results.push(`${passed ? "✅" : "❌"} ${label}: ${actual} === ${expected}`);
   }
 
-  meterData = {};
-  meterHistory = {};
+  window.meterData = {};
+  window.meterHistory = {};
 
   let res = processMeterReading("TEST1", 500, 300);
   assertEqual(res.bill, 500 * CONFIG.tariffs.day + 300 * CONFIG.tariffs.night, "Новий лічильник");
