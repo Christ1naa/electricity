@@ -30,5 +30,4 @@ function runTests() {
   document.getElementById("test-results").innerText = results.join("\n");
 }
 
-// ✅ ОГОЛОСИТИ ГЛОБАЛЬНО
 window.runTests = runTests;
